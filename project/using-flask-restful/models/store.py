@@ -26,9 +26,13 @@ class StoreModel(db.Model):
         return cls.query.all()
 
     def save_to_db(self):
+    try:
         db.session.add(self)
         db.session.commit()
-
+    except:                         
+        db.session.rollback()
+        pass                        
+        
     def delete_from_db(self):
         db.session.delete(self)
         db.session.commit()
