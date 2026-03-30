@@ -11,7 +11,7 @@ from resources.tag import Tag
 
 app = Flask(__name__)
 app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///data.db"
-app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
+app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = True
 app.config["PROPAGATE_EXCEPTIONS"] = True
 db.init_app(app)
 api = Api(app)
@@ -21,7 +21,7 @@ JWT related configuration. The following functions includes:
 1) add claims to each jwt
 2) customize the token expired error message
 """
-app.config["JWT_SECRET_KEY"] = "jose"
+app.config["JWT_SECRET_KEY"] = "jose@123"
 jwt = JWTManager(app)
 
 """
@@ -34,7 +34,7 @@ one possible use case for claims are access level control, which is shown below
 @jwt.additional_claims_loader
 def add_claims_to_jwt(identity):
     # TODO: Read from a config file instead of hard-coding
-    if identity == 1:
+    if identity == 1  or identity == 2:
         return {"is_admin": True}
     return {"is_admin": False}
 
@@ -101,11 +101,7 @@ with app.app_context():
     db.create_all()
 
 
-api.add_resource(UserRegister, "/register")
-api.add_resource(UserLogin, "/login")
-api.add_resource(UserLogout, "/logout")
-api.add_resource(User, "/user/<int:user_id>")
-api.add_resource(TokenRefresh, "/refresh")
+
 api.add_resource(Store, "/store/<string:name>")
 api.add_resource(StoreList, "/store")
 api.add_resource(Item, "/item/<string:name>")
