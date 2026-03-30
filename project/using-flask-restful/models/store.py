@@ -14,6 +14,7 @@ class StoreModel(db.Model):
             "id": self.id,
             "name": self.name,
             "items": [item.json() for item in self.items.all()],
+            "item_count": len([item for item in self.items.all()])  
         }
 
     @classmethod
