@@ -14,6 +14,7 @@ class StoreModel(db.Model):
             "id": self.id,
             "name": self.name,
             "items": [item.json() for item in self.items.all()],
+            "item_count": len([item for item in self.items.all()])  
         }
 
     @classmethod
@@ -25,9 +26,13 @@ class StoreModel(db.Model):
         return cls.query.all()
 
     def save_to_db(self):
+    try:
         db.session.add(self)
         db.session.commit()
-
+    except:                         
+        db.session.rollback()
+        pass                        
+        
     def delete_from_db(self):
         db.session.delete(self)
         db.session.commit()
